@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h1>hello World</h1>
+    <div id="log">
+        <p>log list</p>
+    </div>
+    <form>
+        <input id="m"/>
+        <button type="submit" >提交</button>
+    </form>
+</body>
+    <script src="/static/js/socket.io.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+    $(function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port + '/zigbee');
+        socket.on('view_channl',(msg)=>{
+            console.log(msg)
+            $('#log').append('<p>Received: ' + msg.data + '</p>');
+        })
+        $('form').submit(function(){
+            socket.emit('collection_channl', $('#m').val());
+            $('#m').val('');
+            return false;
+        });
+    });
+    </script>
+    <script></script>
+</html>
