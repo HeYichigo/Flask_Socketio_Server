@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+    <link rel="stylesheet" href="/static/css/main.css" type="text/css"/>
+    <link rel="stylesheet" href="/static/css/statistic.css" type="text/css"/>
+    <title>DushBoard</title>
+</head>
+<body>
+    <form>
+        temp:<input id="m" label="temp:"/>
+        place:<input id="d" label="place:"/>
+        <button type="submit" >提交</button>
+    </form>
+</body>
+    <script src="/static/js/socket.io.js"></script>
+    <script src="/static/js/moment.min.js"></script>
+    <script src="/static/js/util.js"></script>
+    <script src="/static/js/jquery.js"></script>
+    <script>
+    $(function () {
+        var socket = io.connect('http://' + document.domain + ':' + location.port + '/zigbee');
+        
+        $('form').submit(function(){
+            let temp = parseFloat($('#m').val())
+            let from = $('#d').val()
+            let data = {
+                message:{
+                    from,
+                    temp
+                },
+                timestamp:Date()
+            }
+            socket.emit('collection_channl', data);
+            $('#m').val('');
+            return false;
+        });
+    });
+    </script>
+    <script></script>
+</html>

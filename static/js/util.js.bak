@@ -1,39 +1,25 @@
 var sourceTemplate = {
     time: null,
 }
-var dataset = {}
 
-var series = []
-
-function transformMessageToOption(item = {
+function transformMessageToSourceItem(item = {
     message: null,
     timestamp: null
 }) {
-
-    let {
-        from
-    } = item.message
-    // 放入并加载相应数据集的数据
-    let data = assignDataset(item)
-    let option = {
-        series
+    // 拷贝模板对象
+    let sourceItem = {
+        ...sourceTemplate
     }
-    return option
-}
-
-function assignDataset(item = {
-    message: null,
-    timestamp: null
-}) {
+    // let timestamp = moment(item.timestamp).format('HH:mm:ss')
+    let timestamp = moment(item.timestamp).valueOf()
+    // let timestamp = item.timestamp
+    sourceItem.time = timestamp
     let {
         from,
         temp
     } = item.message
-    let timestamp = moment(item.timestamp).valueOf()
-    // from字段添加数据
-    dataset[from].push([timestamp, temp])
-    // 返回相应字段的数据
-    return dataset[from]
+    sourceItem[from] = temp
+    return sourceItem
 }
 
 function transformMessageToSeriesItem(item = {
@@ -43,36 +29,30 @@ function transformMessageToSeriesItem(item = {
     let {
         from
     } = item.message
-    // dataset新增 from字段 
-    dataset[from] = []
-
     let seriesItem = {
         name: from,
         type: 'line',
         smooth: true,
-        data: dataset[from]
+        encode: {
+            x: 'time',
+            y: from,
+            tooltip: from,
+            seriesName: from,
+            itemId: from
+        }
     }
-    // series 新增系列
-    series.push(seriesItem)
+    // 更新模板
+    sourceTemplate[from] = ''
     return seriesItem
 }
 
-function isExist(target) {
-    let find = series.filter(item => item.name == target)
+function isExist(array = [], target) {
+    let find = array.filter(item => item.name == target)
     if (find[0]) {
         return true
     } else {
         return false
     }
-}
-
-function isSeriesEmpty() {
-    if (series.length == 0) {
-        return true
-    } else {
-        return false
-    }
-
 }
 
 function updateOldData(source = []) {

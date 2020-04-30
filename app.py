@@ -16,6 +16,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/zigbee/client')
+def client():
+    return render_template('client.html')
+
+
 @socketio.on('collection_channl', namespace='/zigbee')
 def broadcast_message(message):
     logging.info(message)

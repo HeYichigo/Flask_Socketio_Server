@@ -10,11 +10,6 @@
     <title>DushBoard</title>
 </head>
 <body>
-    <form>
-        temp:<input id="m" label="temp:"/>
-        place:<input id="d" label="place:"/>
-        <button type="submit" >提交</button>
-    </form>
     <div id="temp-log">
         <div class="svg-container">
             <svg width="184" height="152" viewBox="0 0 184 152" xmlns="http://www.w3.org/2000/svg">
@@ -48,20 +43,7 @@
     <script src="/static/js/jquery.js"></script>
     <script>
         var chartTemp = echarts.init(document.getElementById('main'),null,{renderer:'svg'});
-        // 定义全局source 和 series 以便异步添加
-        var source = [
-                        {time: '2020-04-25', 'place_A': 43.3, 'place_B': 85.8, 'place_C': 93.7},
-                        {time: '2020-04-26', 'place_A': 83.1, 'place_B': 73.4, 'place_C': 55.1},
-                        {time: '2020-04-27', 'place_A': 86.4, 'place_B': 65.2, 'place_C': 82.5},
-                        {time: '2020-04-28', 'place_A': 72.4, 'place_B': 13.9, 'place_C': 39.1}
-                    ]
-            source = []
-        var series = [
-                        {name:'place_A',type: 'line',encode:{x:'time',y:'place_A',tooltip:'place_A',seriesName:'place_A',itemId: 'place_A'}},
-                        {name:'place_B',type: 'line',encode:{x:'time',y:'place_B',tooltip:'place_B',seriesName:'place_B',itemId: 'place_B'}},
-                        {name:'place_C',type: 'line',encode:{x:'time',y:'place_C',tooltip:'place_C',seriesName:'place_C',itemId: 'place_C'}}
-                    ]
-            series = []
+        
         // 指定图表的配置项和数据
         var option = {
                 legend: {},
@@ -78,9 +60,6 @@
                         restore: {show: true},
                         saveAsImage: {show: true}
                     }
-                },
-                dataset: {
-                    source,
                 },
                 xAxis: {
                     type: 'time',
@@ -106,7 +85,7 @@
 
 
                 },
-                series
+                series:[]
             };
 
         // 使用刚指定的配置项和数据显示图表。
@@ -114,6 +93,7 @@
         function cleanLog(){
             $('#temp-log').html('')
         }
+
         function createLog(res){
             let {
                 from,
@@ -122,6 +102,7 @@
             let htmlString = createCardString({id:from,title:from,description:'Temperature',value:temp})
             $('#temp-log').append(htmlString)
         }
+
         function updateLog(res){
             let id = res.message.from
             let {
@@ -132,6 +113,7 @@
             $(`#${id}Int`).text(intValue)
             $(`#${id}Decimal`).text('.'+floatValue)
         }
+
         function updateChart(res = {
             message: null,
             timestamp: null
@@ -142,27 +124,17 @@
             }
             let name = res.message.from
             
-            if(!isExist(series,name)){
-                if(series.length == 0){
+            if(!isExist(name)){
+                if(isSeriesEmpty()){
                     cleanLog()
                 }
                 let seriesItem = transformMessageToSeriesItem(res)
-                series.push(seriesItem)
-                source = updateOldData(source)
+                
+                //source = updateOldData(source)
                 createLog(res)
             }
             updateLog(res)
-            let sourceItem = transformMessageToSourceItem(res)
-            source.push(sourceItem)
-
-            // 指定图表的配置项和数据
-            var option = {
-                    dataset: {
-                        source,
-                    },
-                    series
-                };
-
+            let option = transformMessageToOption(res)
             // 使用刚指定的配置项和数据显示图表。
             chartTemp.setOption(option);
             
@@ -174,20 +146,6 @@
             updateChart(msg.data)
             $('#log').append('<p>Received: ' + msg.data + '</p>');
         })
-        $('form').submit(function(){
-            let temp = parseFloat($('#m').val())
-            let from = $('#d').val()
-            let data = {
-                message:{
-                    from,
-                    temp
-                },
-                timestamp:Date()
-            }
-            socket.emit('collection_channl', data);
-            $('#m').val('');
-            return false;
-        });
     });
     </script>
     <script></script>

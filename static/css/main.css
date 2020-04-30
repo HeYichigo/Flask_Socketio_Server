@@ -44,12 +44,22 @@
 }
 
 .chart-container {
+    position: relative;
     height: 60vh;
     border: 1px solid #eee;
+    margin: 0px 20px 20px 20px;
+    padding: 20px 20px 0px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 body {
     height: 100vh;
+    position: relative;
+    top: 0;
+    left: 0;
 }
 
 .svg-container {
