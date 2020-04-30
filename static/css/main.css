@@ -1,0 +1,66 @@
+#temp-log {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: start;
+    height: 300px;
+    padding: 20px 20px 20px 20px;
+}
+
+#temp-log .log-card {
+    height: 200px;
+    width: 320px;
+    margin-right: 10px;
+    border: 1px solid #eee;
+}
+
+.card-container {
+    display: grid;
+    height: 100%;
+    width: 100%;
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(9, 1fr);
+    grid-template-areas: "header header header header header header header header header"
+        ". content content content content content content content ."
+        ". content content content content content content content ."
+        "footer footer footer footer footer footer footer footer footer";
+}
+
+.card-container .card-header {
+    grid-area: header;
+    /* color: rgba(0, 0, 0, .45); */
+    font-size: 24px;
+}
+
+.card-container .card-content {
+    grid-area: content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.card-container .card-footer {
+    grid-area: footer;
+}
+
+.chart-container {
+    height: 60vh;
+    border: 1px solid #eee;
+}
+
+body {
+    height: 100vh;
+}
+
+.svg-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.svg-container .svg-label {
+    font-size: 24px;
+    font-weight: bold;
+}

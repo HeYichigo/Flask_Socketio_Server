@@ -64,3 +64,53 @@ function updateOldData(source = []) {
     })
     return newData
 }
+
+function transformFloatToString(value) {
+    value = value + ''
+    let valueArray = value.split('.')
+    let intValue = valueArray[0]
+    let floatValue = '0'
+    if (valueArray[1]) {
+        floatValue = valueArray[1]
+    }
+    return {
+        intValue,
+        floatValue
+    }
+}
+
+function createCardString(childParams = {
+    id: '',
+    title: '',
+    description: '',
+    value: ''
+}) {
+    let {
+        id,
+        title,
+        description,
+        value
+    } = childParams
+
+    let {
+        intValue,
+        floatValue
+    } = transformFloatToString(value)
+
+    let html = `<div class="log-card card-container">
+            <div class="card-content">
+                <div class="ant-statistic">
+                    <div id="${id}Title" class="ant-statistic-title">Location:${title}</div>
+                    <div id="${id}Description" class="ant-statistic-description">${description}</div>
+                    <div class="ant-statistic-content">
+                        <span class="ant-statistic-content-value">
+                            <span id="${id}Int" class="ant-statistic-content-value-int">${intValue}</span>
+                            <span id="${id}Decimal" class="ant-statistic-content-value-decimal">.${floatValue}</span>
+                        </span>
+                        <span class="ant-statistic-content-suffix">℃</span>
+                    </div>
+                </div>
+            </div>
+        </div>`
+    return html
+}
