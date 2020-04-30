@@ -1,13 +1,14 @@
 import logging
 from flask_socketio import SocketIO, emit
 from flask import Flask, render_template, jsonify
-import eventlet
-eventlet.monkey_patch()
+# import eventlet
+# eventlet.monkey_patch()
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app=app, async_mode='eventlet', cors_allowed_origins='*')
+# socketio = SocketIO(app=app, async_mode='eventlet', cors_allowed_origins='*')
+socketio = SocketIO(app=app, async_mode=None, cors_allowed_origins='*')
 
 
 @app.route('/zigbee/index')
@@ -30,3 +31,7 @@ def connect():
 @socketio.on('disconnect', namespace='/zigbee')
 def disconnect():
     logging.error('disconnect')
+
+
+if __name__ == "__main__":
+    socketio.run(app)
