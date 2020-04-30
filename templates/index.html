@@ -52,7 +52,22 @@
                     axisPointer: {
                         type: 'cross'
                     },
-                    formatter:'位置:{a} <br/>时刻: {c} <br/>温度: {b}°C'
+                    formatter: (params, ticket, callback) => {
+                        let tip = ''
+                        params.forEach(param =>{
+                        let {
+                            data,
+                            seriesName
+                        } = param
+                        let position = seriesName
+                        let timestamp = data[0]
+                        let time = moment(timestamp).format('HH:mm:ss')
+                        let date = moment(timestamp).format('MM-DD')
+                        let temp = data[1]
+                        tip = `${tip}<b>日期:</b> ${date} &nbsp; &nbsp; &nbsp;  <b>位置:</b> ${position}<br/><hr/><b>时刻:</b> ${time} <br/><b>温度:</b> ${temp}°C<br/><br/><br/>`
+                        })
+                        return tip
+                    }
                 },
                 toolbox: {
                     feature: {
@@ -82,8 +97,6 @@
                     axisLabel: {
                         formatter: '{value} °C'
                     }
-
-
                 },
                 series:[]
             };
